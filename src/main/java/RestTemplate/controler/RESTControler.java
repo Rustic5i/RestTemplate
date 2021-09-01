@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.PostConstruct;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,7 +21,11 @@ public class RESTControler {
     public RESTControler(HttpHeaders headers, RestTemplate restTemplate) {
         this.headers = headers;
         this.restTemplate = restTemplate;
-        this.headers.set("Cookie",String.join(";",restTemplate.headForHeaders(URL).get("Set-Cookie"))); //получаем из Cookie id session
+
+    }
+    @PostConstruct //Spring вызывает методы, аннотированные @PostConstruct, только один раз, сразу после инициализации
+    public void init(){
+        this.headers.set("Cookie",String.join(";",restTemplate.headForHeaders(URL).get("Set-Cookie"))); //получаем из Cookie id session\
     }
 
 
